@@ -1,11 +1,10 @@
 import { Organizations } from "./models/organizations";
 
-const data = require('./MockData.json');
+const data = require('./models/MockData.json');
 
 class Auction{
 
     readonly organizations: Organizations
-    readonly socket;
 
     constructor() {
         this.organizations = new Organizations(data.participates)

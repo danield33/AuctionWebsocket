@@ -15,4 +15,8 @@ export class Organizations{
     return new Map(entries);
   }
 
+  toJSON(){
+    return Object.fromEntries(this.orgs);
+  }
+
 }
