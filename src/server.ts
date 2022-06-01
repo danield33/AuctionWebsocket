@@ -2,6 +2,7 @@ import {createServer, Server} from 'http';
 import * as express from 'express';
 import * as SocketIO from 'socket.io';
 import {db} from "./database";
+import {Organization, OrganizationObj} from "./database/models/organizations/Organization";
 const io = require('socket.io');
 const cors = require('cors');
 
@@ -37,6 +38,14 @@ export class AuctionServer{
             socket.on('displayNewWinner', (m: string[]) => {
 
             });
+
+            socket.on('addNewOrg', (m: OrganizationObj) => {
+                const org = db.organizations.add(m);
+                org.save();
+                this.io.emit('dataUpdate', {
+                    participants: Object.fromEntries(db.organizations.orgs)
+                })
+            })
 
             socket.on('message', (m) => {
                 console.log(`[server](message): ${JSON.stringify(m)}`);
