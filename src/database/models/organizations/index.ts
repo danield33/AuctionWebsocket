@@ -18,7 +18,8 @@ export class Organizations{
   convert(orgObj: {[id: string]: OrganizationObj}): Map<string, Organization> {
     const entries: Array<any> = Object.entries(orgObj)
       .map(i => {
-        return [i[0], new Organization(i[1])]
+        const organization = new Organization(i[1]);
+        return [i[0], organization]
       });
     return new Map(entries);
   }
