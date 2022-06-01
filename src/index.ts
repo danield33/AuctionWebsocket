@@ -11,7 +11,6 @@ app.get('/getData', (req, res) => {
 
 app.get('/images', (req, res) => {
     if(!req.query['id']) res.send(null);
-    console.log(req.query)
     const {id} = req.query;
     const organization = db.organizations.orgs.get(id as string);
     organization.getImage().then(r => {

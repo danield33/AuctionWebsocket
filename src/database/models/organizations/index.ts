@@ -4,8 +4,6 @@ const data = require('../MockData.json')
 const fs = require('fs');
 import {RequestInfo, RequestInit} from "node-fetch";
 
-const fetch = (url: RequestInfo, init?: RequestInit) =>  import("node-fetch").then(({ default: fetch }) => fetch(url, init));
-
 export class Organizations{
 
   readonly orgs = new Map<string, Organization>();
