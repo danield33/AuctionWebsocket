@@ -2,19 +2,24 @@ import {Organization, OrganizationObj} from "./Organization";
 const crypto = require("crypto");
 const data = require('../MockData.json')
 const fs = require('fs');
+import {RequestInfo, RequestInit} from "node-fetch";
+
+const fetch = (url: RequestInfo, init?: RequestInit) =>  import("node-fetch").then(({ default: fetch }) => fetch(url, init));
 
 export class Organizations{
 
   readonly orgs = new Map<string, Organization>();
 
-  constructor(orgs: OrganizationObj) {
-    this.orgs = this.convert(orgs as unknown as {[id: string]: typeof Organization.prototype});
+  constructor(orgs: {[id: string]: OrganizationObj}) {
+    this.orgs = this.convert(orgs);
 
   }
 
-  convert(orgObj: {[id: string]: typeof Organization.prototype}): Map<string, Organization> {
+  convert(orgObj: {[id: string]: OrganizationObj}): Map<string, Organization> {
     const entries: Array<any> = Object.entries(orgObj)
-      .map(i => [i[0], new Organization(i[1])]);
+      .map(i => {
+        return [i[0], new Organization(i[1])]
+      });
     return new Map(entries);
   }
 
