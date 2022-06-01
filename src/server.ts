@@ -28,6 +28,11 @@ export class AuctionServer{
 
         this.io.on('connect', (socket: any) => {
             console.log(`Connected client on port ${this.port}`);
+
+            socket.on('displayNewWinner', (m: string[]) => {
+
+            });
+
             socket.on('message', (m: any) => {
                 console.log(`[server](message): ${JSON.stringify(m)}`);
                 this.io.emit('message', m);
