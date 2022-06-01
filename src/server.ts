@@ -1,26 +1,29 @@
 import {createServer, Server} from 'http';
 import * as express from 'express';
 import * as SocketIO from 'socket.io';
+const io = require('socket.io');
 
 export class AuctionServer{
 
     public static readonly PORT: number = 8080;
     private app: express.Application;
     private server: Server;
-    private io: SocketIO.Server;
+    private io: SocketIO.Socket;
     private port: string|number;
 
     constructor() {
         this.app = express();
         this.port = process.env.PORT || AuctionServer.PORT;
         this.server = createServer(this.app);
-        this.io = new SocketIO.Server(this.server);
+        this.io = io(this.server, {
+            cors: {origin: '*'}
+        });
         this.listen();
     }
 
     private listen(){
         this.server.listen(this.port, () => {
-            console.log('Running server on port: ' + this.port);
+            console.log(`Listening on http://localhost:${this.port}`);
         });
 
         this.io.on('connect', (socket: any) => {
