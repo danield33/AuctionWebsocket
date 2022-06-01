@@ -14,8 +14,8 @@ export class Organization {
 
     name: string;
     id: string;
-    image: Promise<string>;
-    description: string;
+    image?: Promise<string>;
+    description?: string;
 
     constructor(organization: OrganizationObj) {
         this.name = organization.name;
@@ -44,9 +44,18 @@ export class Organization {
         })
     }
 
+    deleteImage(){
+        console.log('delete')
+        fs.unlink(this.path, (err) => console.error(err));
+    }
+
 
     async getImage(): Promise<string> {
-        return await ImageDataURI.encodeFromFile(this.path)
+        try{
+            return await ImageDataURI.encodeFromFile(this.path)
+        }catch{
+            return Promise.resolve(null);
+        }
     }
 
     setImage(val) {
@@ -54,6 +63,7 @@ export class Organization {
     }
 
     private dataURLtoFile(dataURI: string) {
+        if(!dataURI) return;
         ImageDataURI.outputFile(dataURI, this.path)
     }
 

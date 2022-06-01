@@ -45,6 +45,28 @@ export class AuctionServer{
                 this.io.emit('dataUpdate', {
                     participants: Object.fromEntries(db.organizations.orgs)
                 })
+            });
+
+            socket.on('updateOrg', (m: OrganizationObj) => {
+                if(!m.id) return;
+                const organization = db.organizations.orgs.get(m.id);
+                organization.name = m.name;
+                organization.description = m.description;
+                organization.image = Promise.resolve(m.image);
+
+                organization.save();
+                this.io.emit('dataUpdate', {
+                    participants: Object.fromEntries(db.organizations.orgs)
+                })
+            })
+
+            socket.on('deleteImage', (fromOrgID: string) => {
+                console.log(fromOrgID)
+                if(!fromOrgID) return;
+                db.organizations.orgs.get(fromOrgID).deleteImage();
+                this.io.emit('dateUpdate', {
+                    participants: Object.fromEntries(db.organizations.orgs)
+                })
             })
 
             socket.on('message', (m) => {
