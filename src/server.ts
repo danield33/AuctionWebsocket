@@ -47,6 +47,13 @@ export class AuctionServer{
                 })
             });
 
+            socket.on('deleteOrg', (orgID: string) => {
+                db.organizations.delete(orgID);
+                this.io.emit('dataUpdate', {
+                    participants: Object.fromEntries(db.organizations.orgs)
+                })
+            })
+
             socket.on('updateOrg', (m: OrganizationObj) => {
                 if(!m.id) return;
                 const organization = db.organizations.orgs.get(m.id);
@@ -64,16 +71,10 @@ export class AuctionServer{
             })
 
             socket.on('deleteImage', (fromOrgID: string) => {
-                console.log(fromOrgID)
                 if(!fromOrgID) return;
                 db.organizations.orgs.get(fromOrgID).deleteImage();
                 this.io.emit('imageUpdate', fromOrgID);
             })
-
-            socket.on('message', (m) => {
-                console.log(`[server](message): ${JSON.stringify(m)}`);
-                this.io.emit('message', m);
-            });
 
             socket.on('disconnect', () => {
                 console.log('Client disconnected');

@@ -30,6 +30,12 @@ export class Organizations{
     return newOrg;
   }
 
+  delete(orgID: string){
+    const organization = this.orgs.get(orgID);
+    this.orgs.delete(organization.id);
+    organization.delete();
+  }
+
   save(){
     fs.writeFileSync(__dirname+'/../MockData.json', JSON.stringify(data, null, 2), 'utf-8');
   }

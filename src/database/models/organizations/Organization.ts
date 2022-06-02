@@ -49,6 +49,12 @@ export class Organization {
             fs.unlink(this.path, () => void 0);
     }
 
+    delete(){
+        delete data.participates[this.id];
+        fs.writeFileSync(__dirname + '/../MockData.json', JSON.stringify(data, null, 2), 'utf-8');
+        this.deleteImage();
+    }
+
     async getImage(): Promise<string> {
         try{
             return await ImageDataURI.encodeFromFile(this.path)
