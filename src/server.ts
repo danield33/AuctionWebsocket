@@ -58,15 +58,16 @@ export class AuctionServer{
                 this.io.emit('dataUpdate', {
                     participants: Object.fromEntries(db.organizations.orgs)
                 })
+
+                this.io.emit('imageUpdate', m.id);
+
             })
 
             socket.on('deleteImage', (fromOrgID: string) => {
                 console.log(fromOrgID)
                 if(!fromOrgID) return;
                 db.organizations.orgs.get(fromOrgID).deleteImage();
-                this.io.emit('dateUpdate', {
-                    participants: Object.fromEntries(db.organizations.orgs)
-                })
+                this.io.emit('imageUpdate', fromOrgID);
             })
 
             socket.on('message', (m) => {

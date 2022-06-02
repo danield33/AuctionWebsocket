@@ -45,10 +45,9 @@ export class Organization {
     }
 
     deleteImage(){
-        console.log('delete')
-        fs.unlink(this.path, (err) => console.error(err));
+        if(fs.existsSync(this.path))
+            fs.unlink(this.path, () => void 0);
     }
-
 
     async getImage(): Promise<string> {
         try{
