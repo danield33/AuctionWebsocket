@@ -35,8 +35,8 @@ export class AuctionServer{
         this.io.on('connect', (socket: SocketIO.Socket) => {
             console.log(`Connected client on port ${this.port}`);
 
-            socket.on('displayNewWinner', (m: string[]) => {
-
+            socket.on('displayNewWinner', (winners: string[]) => {
+                this.io.emit('displayNewWinners', winners)
             });
 
             socket.on('addNewOrg', (m: OrganizationObj) => {
