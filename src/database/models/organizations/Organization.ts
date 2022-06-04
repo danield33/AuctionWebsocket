@@ -27,6 +27,10 @@ export class Organization {
 
     }
 
+    get path() {
+        return __dirname + '/../../../images/' + this.id + '.png'
+    }
+
     save() {
         data.participates[this.id] = {
             name: this.name,
@@ -44,21 +48,21 @@ export class Organization {
         })
     }
 
-    deleteImage(){
-        if(fs.existsSync(this.path))
+    deleteImage() {
+        if (fs.existsSync(this.path))
             fs.unlink(this.path, () => void 0);
     }
 
-    delete(){
+    delete() {
         delete data.participates[this.id];
         fs.writeFileSync(__dirname + '/../MockData.json', JSON.stringify(data, null, 2), 'utf-8');
         this.deleteImage();
     }
 
     async getImage(): Promise<string> {
-        try{
+        try {
             return await ImageDataURI.encodeFromFile(this.path)
-        }catch{
+        } catch {
             return Promise.resolve(null);
         }
     }
@@ -68,12 +72,8 @@ export class Organization {
     }
 
     private dataURLtoFile(dataURI: string) {
-        if(!dataURI) return;
+        if (!dataURI) return;
         ImageDataURI.outputFile(dataURI, this.path)
-    }
-
-    get path() {
-        return __dirname+'/../../../images/' + this.id + '.png'
     }
 
 }

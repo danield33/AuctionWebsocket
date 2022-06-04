@@ -1,8 +1,8 @@
-import { Organizations } from "./models/organizations";
+import {Organizations} from "./models/organizations";
 
 const data = require('./models/MockData.json');
 
-class Auction{
+class Auction {
 
     readonly organizations: Organizations
 

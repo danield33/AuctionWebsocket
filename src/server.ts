@@ -2,17 +2,18 @@ import {createServer, Server} from 'http';
 import * as express from 'express';
 import * as SocketIO from 'socket.io';
 import {db} from "./database";
-import {Organization, OrganizationObj} from "./database/models/organizations/Organization";
+import {OrganizationObj} from "./database/models/organizations/Organization";
+
 const io = require('socket.io');
 const cors = require('cors');
 
-export class AuctionServer{
+export class AuctionServer {
 
     public static readonly PORT: number = 8080;
     private app: express.Application;
     private server: Server;
     private io: SocketIO.Socket;
-    private port: string|number;
+    private port: string | number;
 
     constructor() {
         this.app = express();
@@ -27,7 +28,11 @@ export class AuctionServer{
         this.listen();
     }
 
-    private listen(){
+    public getApp(): express.Application {
+        return this.app;
+    }
+
+    private listen() {
         this.server.listen(this.port, () => {
             console.log(`Listening on http://localhost:${this.port}`);
         });
@@ -55,7 +60,7 @@ export class AuctionServer{
             })
 
             socket.on('updateOrg', (m: OrganizationObj) => {
-                if(!m.id) return;
+                if (!m.id) return;
                 const organization = db.organizations.orgs.get(m.id);
                 organization.name = m.name;
                 organization.description = m.description;
@@ -71,7 +76,7 @@ export class AuctionServer{
             })
 
             socket.on('deleteImage', (fromOrgID: string) => {
-                if(!fromOrgID) return;
+                if (!fromOrgID) return;
                 db.organizations.orgs.get(fromOrgID).deleteImage();
                 this.io.emit('imageUpdate', fromOrgID);
             })
@@ -82,11 +87,6 @@ export class AuctionServer{
 
         })
 
-    }
-
-
-    public getApp(): express.Application{
-        return this.app;
     }
 
 }
