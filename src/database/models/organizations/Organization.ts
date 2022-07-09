@@ -14,6 +14,9 @@ export class Organization {
 
     name: string;
     id: string;
+    /**
+     *  a base 64 string
+     */
     image?: Promise<string>;
     description?: string;
 

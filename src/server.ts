@@ -19,11 +19,13 @@ export class AuctionServer {
         this.app = express();
         this.app.use(cors({
             origin: ['http://localhost:4000']
-        }))
+        }));
+
         this.port = process.env.PORT || AuctionServer.PORT;
         this.server = createServer(this.app);
         this.io = io(this.server, {
-            cors: {origin: '*'}
+            cors: {origin: '*'},
+            maxHttpBufferSize: 4e6
         });
         this.listen();
     }
@@ -45,6 +47,7 @@ export class AuctionServer {
             });
 
             socket.on('addNewOrg', (m: OrganizationObj) => {
+                console.log(m)
                 const org = db.organizations.add(m);
                 org.save();
                 this.io.emit('dataUpdate', {

@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../AuctionDesktopApp/.idea/AuctionDesktopApp.iml" filepath="$PROJECT_DIR$/../AuctionDesktopApp/.idea/AuctionDesktopApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../AuctionMobileApp/.idea/AuctionMobileApp.iml" filepath="$PROJECT_DIR$/../AuctionMobileApp/.idea/AuctionMobileApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/AuctionWebsocket.iml" filepath="$PROJECT_DIR$/.idea/AuctionWebsocket.iml" />
     </modules>
   </component>
