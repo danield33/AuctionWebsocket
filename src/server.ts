@@ -25,7 +25,7 @@ export class AuctionServer {
         this.server = createServer(this.app);
         this.io = io(this.server, {
             cors: {origin: '*'},
-            maxHttpBufferSize: 4e6
+            maxHttpBufferSize: 10e6
         });
         this.listen();
     }
