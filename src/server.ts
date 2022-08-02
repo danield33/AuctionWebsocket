@@ -47,7 +47,6 @@ export class AuctionServer {
             });
 
             socket.on('addNewOrg', (m: OrganizationObj) => {
-                console.log(m)
                 const org = db.organizations.add(m);
                 org.save();
                 this.io.emit('dataUpdate', {
