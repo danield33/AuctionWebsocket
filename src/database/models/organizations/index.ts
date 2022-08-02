@@ -7,10 +7,11 @@ const fs = require('fs');
 export class Organizations {
 
     readonly orgs = new Map<string, Organization>();
+    idIncrement = 0;
 
     constructor(orgs: { [id: string]: OrganizationObj }) {
         this.orgs = this.convert(orgs);
-
+        this.idIncrement = data.idIncrement;
     }
 
     convert(orgObj: { [id: string]: OrganizationObj }): Map<string, Organization> {
@@ -23,9 +24,12 @@ export class Organizations {
     }
 
     add(org: OrganizationObj) {
-        const id = crypto.randomBytes(16).toString('hex')
+        const id = (this.idIncrement+1).toString();
         const newOrg = new Organization({...org, id});
+        this.idIncrement++;
         this.orgs.set(newOrg.id, newOrg);
+
+        this.save();
 
         return newOrg;
     }
@@ -37,11 +41,14 @@ export class Organizations {
     }
 
     save() {
-        fs.writeFileSync(__dirname + '/../MockData.json', JSON.stringify(data, null, 2), 'utf-8');
+        fs.writeFileSync(__dirname + '/../MockData.json', JSON.stringify(this), 'utf-8');
     }
 
     toJSON() {
-        return Object.fromEntries(this.orgs);
+        return {
+            idIncrement: this.idIncrement,
+            participates: Object.fromEntries(this.orgs)
+        };
     }
 
 }
