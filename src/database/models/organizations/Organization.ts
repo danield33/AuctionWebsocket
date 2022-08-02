@@ -1,5 +1,5 @@
 const fs = require('fs');
-const data = require('../MockData.json');
+const data = require('../../../../OrgData.json');
 const atob = require('atob');
 const ImageDataURI = require('image-data-uri');
 
@@ -31,7 +31,7 @@ export class Organization {
     }
 
     get path() {
-        return __dirname + '/../../../images/' + this.id + '.png'
+        return __dirname + '/../../../../images/' + this.id + '.png'
     }
 
     save() {
@@ -40,7 +40,10 @@ export class Organization {
             id: this.id,
             description: this.description
         };
-        fs.writeFileSync(__dirname + '/../MockData.json', JSON.stringify(data, null, 2), 'utf-8');
+        const number = Number(this.id);
+        if(data.idIncrement < number)
+            data.idIncrement = number;
+        fs.writeFileSync(__dirname + '/../../../../OrgData.json', JSON.stringify(data, null, 2), 'utf-8');
         this.saveImage();
     }
 
@@ -58,7 +61,7 @@ export class Organization {
 
     delete() {
         delete data.participates[this.id];
-        fs.writeFileSync(__dirname + '/../MockData.json', JSON.stringify(data, null, 2), 'utf-8');
+        fs.writeFileSync(__dirname + '/../../../../OrgData.json', JSON.stringify(data, null, 2), 'utf-8');
         this.deleteImage();
     }
 

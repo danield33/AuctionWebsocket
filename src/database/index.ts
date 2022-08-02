@@ -1,6 +1,6 @@
 import {Organizations} from "./models/organizations";
 
-const data = require('./models/MockData.json');
+const data = require('../../OrgData.json');
 
 class Auction {
 

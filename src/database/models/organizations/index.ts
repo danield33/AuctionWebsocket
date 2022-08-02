@@ -1,7 +1,7 @@
 import {Organization, OrganizationObj} from "./Organization";
 
 const crypto = require("crypto");
-const data = require('../MockData.json')
+const data = require('../../../../OrgData.json')
 const fs = require('fs');
 
 export class Organizations {
@@ -41,7 +41,7 @@ export class Organizations {
     }
 
     save() {
-        fs.writeFileSync(__dirname + '/../MockData.json', JSON.stringify(this), 'utf-8');
+        fs.writeFileSync(__dirname + '/../OrgData.json', JSON.stringify(this.toJSON()), 'utf-8');
     }
 
     toJSON() {
