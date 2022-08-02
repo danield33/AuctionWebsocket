@@ -11,7 +11,7 @@
     "ws": "^8.7.0"
   },
   "scripts": {
-    "postinstall": "gulp build && cp src/database/models/MockData.json dist/database/models",
+    "postinstall": "gulp build && cp -n src/database/models/MockData.json dist/database/models",
     "start": "node dist/index.js"
 
   },
