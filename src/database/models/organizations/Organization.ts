@@ -17,7 +17,7 @@ export class Organization {
     /**
      *  a base 64 string
      */
-    image?: Promise<string>;
+    image?: Promise<string|null>;
     description?: string;
 
     constructor(organization: OrganizationObj) {
@@ -46,7 +46,7 @@ export class Organization {
 
     saveImage() {
 
-        this.image.then(img => {
+        this.image?.then(img => {
             this.dataURLtoFile(img);
         })
     }
@@ -62,7 +62,7 @@ export class Organization {
         this.deleteImage();
     }
 
-    async getImage(): Promise<string> {
+    async getImage(): Promise<string|null> {
         try {
             return await ImageDataURI.encodeFromFile(this.path)
         } catch {
@@ -70,11 +70,11 @@ export class Organization {
         }
     }
 
-    setImage(val) {
+    setImage(val: string) {
         this.dataURLtoFile(val);
     }
 
-    private dataURLtoFile(dataURI: string) {
+    private dataURLtoFile(dataURI: string|null) {
         if (!dataURI) return;
         ImageDataURI.outputFile(dataURI, this.path)
     }
