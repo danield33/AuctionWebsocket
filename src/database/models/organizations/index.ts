@@ -1,17 +1,21 @@
 import {Organization, OrganizationObj} from "./Organization";
-
-const crypto = require("crypto");
-const data = require('../../../../OrgData.json')
-const fs = require('fs');
+import {child, getDatabase, onValue, ref, remove, set} from 'firebase/database';
 
 export class Organizations {
 
     readonly orgs = new Map<string, Organization>();
     idIncrement = 0;
+    private readonly ref = ref(getDatabase(), 'buyers');
 
-    constructor(orgs: { [id: string]: OrganizationObj }) {
-        this.orgs = this.convert(orgs);
-        this.idIncrement = data.idIncrement;
+    constructor() {
+        this.getDataFromFirebase();
+    }
+
+    getDataFromFirebase() {
+        onValue(this.ref, (snapshot) => {
+            const orgs = snapshot.val();
+            orgs.forEach(org => this.orgs.set(org.id, new Organization(org)));
+        })
     }
 
     convert(orgObj: { [id: string]: OrganizationObj }): Map<string, Organization> {
@@ -24,24 +28,30 @@ export class Organizations {
     }
 
     add(org: OrganizationObj) {
-        const id = (this.idIncrement+1).toString();
-        const newOrg = new Organization({...org, id});
-        this.idIncrement++;
+        const id = (this.idIncrement + 1).toString();
+        const {image, ...rest} = org;
+        const newOrg = new Organization({...rest, id});
+
+        if (org.image) {
+            newOrg.setImage(org.image);
+        }
         this.orgs.set(newOrg.id, newOrg);
 
-        this.save();
-
+        this.idIncrement++;
+        set(ref(getDatabase(), 'idIncrement'), this.idIncrement);
+        newOrg.save();
         return newOrg;
     }
 
-    delete(orgID: string) {
+    async delete(orgID: string) {
         const organization = this.orgs.get(orgID);
         this.orgs.delete(organization.id);
-        organization.delete();
+        await organization.deleteImage();
+        await remove(child(this.ref, orgID));
     }
 
-    save() {
-        fs.writeFileSync(__dirname + '/../OrgData.json', JSON.stringify(this.toJSON()), 'utf-8');
+    async save() {
+        await set(this.ref, Object.fromEntries(this.orgs));
     }
 
     toJSON() {

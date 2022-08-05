@@ -14,7 +14,8 @@
   },
   "scripts": {
     "postinstall": "gulp build",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "run": "./node_modules/.bin/gulp build && npm start"
   },
   "devDependencies": {
     "gulp": "^4.0.2",

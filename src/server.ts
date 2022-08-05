@@ -10,10 +10,10 @@ const cors = require('cors');
 export class AuctionServer {
 
     public static readonly PORT: number = 8080;
-    private app: express.Application;
-    private server: Server;
+    private readonly app: express.Application;
+    private readonly server: Server;
     private io: SocketIO.Socket;
-    private port: string | number;
+    private readonly port: string | number;
 
     constructor() {
         this.app = express();
@@ -46,40 +46,38 @@ export class AuctionServer {
                 this.io.emit('displayNewWinners', winners)
             });
 
-            socket.on('addNewOrg', (m: OrganizationObj) => {
+            socket.on('addNewOrg', async (m: OrganizationObj) => {
                 const org = db.organizations.add(m);
-                org.save();
+                await org.save();
                 this.io.emit('dataUpdate', {
                     participants: Object.fromEntries(db.organizations.orgs)
                 })
             });
 
-            socket.on('deleteOrg', (orgID: string) => {
-                db.organizations.delete(orgID);
+            socket.on('deleteOrg', async (orgID: string) => {
+                await db.organizations.delete(orgID);
                 this.io.emit('dataUpdate', {
                     participants: Object.fromEntries(db.organizations.orgs)
                 })
             })
 
-            socket.on('updateOrg', (m: OrganizationObj) => {
+            socket.on('updateOrg', async (m: OrganizationObj) => {
                 if (!m.id) return;
                 const organization = db.organizations.orgs.get(m.id);
                 organization.name = m.name;
                 organization.description = m.description;
-                organization.image = Promise.resolve(m.image);
-
-                organization.save();
+                await organization.setImage(m.image);
+                await organization.save();
                 this.io.emit('dataUpdate', {
                     participants: Object.fromEntries(db.organizations.orgs)
-                })
-
+                });
                 this.io.emit('imageUpdate', m.id);
 
             })
 
-            socket.on('deleteImage', (fromOrgID: string) => {
+            socket.on('deleteImage', async (fromOrgID: string) => {
                 if (!fromOrgID) return;
-                db.organizations.orgs.get(fromOrgID).deleteImage();
+                await db.organizations.orgs.get(fromOrgID).deleteImage();
                 this.io.emit('imageUpdate', fromOrgID);
             })
 
