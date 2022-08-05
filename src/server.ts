@@ -66,7 +66,8 @@ export class AuctionServer {
                 const organization = db.organizations.orgs.get(m.id);
                 organization.name = m.name;
                 organization.description = m.description;
-                await organization.setImage(m.image);
+                if (!m.image || m.image.startsWith('data:'))
+                    await organization.setImage(m.image);
                 await organization.save();
                 this.io.emit('dataUpdate', {
                     participants: Object.fromEntries(db.organizations.orgs)

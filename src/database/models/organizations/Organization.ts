@@ -39,12 +39,16 @@ export class Organization {
     }
 
     async setImage(newImage: string) {//base 64 string
-        await uploadString(this.storeRef, newImage, 'data_url');
+        if(newImage)
+            await uploadString(this.storeRef, newImage, 'data_url');
+        else await this.deleteImage()
     }
 
     async deleteImage() {
-        await deleteObject(this.storeRef);
-        this.image = null;
+        try{
+            await deleteObject(this.storeRef);
+            this.image = null;
+        }catch{}
     }
 
     async getImage(): Promise<string|null> {
