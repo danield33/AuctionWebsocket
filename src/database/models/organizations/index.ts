@@ -5,7 +5,7 @@ import {app} from "../../firebase";
 export class Organizations {
 
     idIncrement = 0;
-    readonly orgs = new Map<string, Organization>();
+    orgs = new Map<string, Organization>();
     private readonly ref = ref(getDatabase(app), 'buyers');
 
     constructor() {
@@ -15,8 +15,14 @@ export class Organizations {
     getDataFromFirebase() {
         onValue(this.ref, (snapshot) => {
             const orgs = snapshot.val();
-            orgs.forEach(org => this.orgs.set(org.id, new Organization(org)));
-        })
+            if (orgs)
+                this.orgs = this.convert(orgs);
+        }, {onlyOnce: true});
+        onValue(ref(getDatabase(app), 'idIncrement'), snapshot => {
+            if (snapshot.val())
+                this.idIncrement = snapshot.val();
+        }, {onlyOnce: true});
+
     }
 
     convert(orgObj: { [id: string]: OrganizationObj }): Map<string, Organization> {
@@ -28,19 +34,19 @@ export class Organizations {
         return new Map(entries);
     }
 
-    add(org: OrganizationObj) {
+    async add(org: OrganizationObj) {
         const id = (this.idIncrement + 1).toString();
         const {image, ...rest} = org;
         const newOrg = new Organization({...rest, id});
 
         if (org.image) {
-            newOrg.setImage(org.image);
+            await newOrg.setImage(org.image);
         }
         this.orgs.set(newOrg.id, newOrg);
 
         this.idIncrement++;
-        set(ref(getDatabase(app), 'idIncrement'), this.idIncrement);
-        newOrg.save();
+        await set(ref(getDatabase(app), 'idIncrement'), this.idIncrement);
+        await newOrg.save();
         return newOrg;
     }
 

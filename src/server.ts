@@ -48,8 +48,7 @@ export class AuctionServer {
             });
 
             socket.on('addNewOrg', async (m: OrganizationObj) => {
-                const org = db.organizations.add(m);
-                await org.save();
+                await db.organizations.add(m);
                 this.io.emit('dataUpdate', {
                     participants: Object.fromEntries(db.organizations.orgs)
                 })

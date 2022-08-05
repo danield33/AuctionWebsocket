@@ -26,7 +26,6 @@ export class Organization {
         this.description = organization.description;
         this.ref = ref(getDatabase(app), 'buyers/'+this.id);
         this.storeRef = storeRef(storage, 'buyer/'+this.id+'.png');
-
     }
 
     async save() {
@@ -51,7 +50,18 @@ export class Organization {
     async getImage(): Promise<string|null> {
         if(this.image != null)
             return this.image;
-        this.image = await getDownloadURL(this.storeRef);
+        return new Promise(resolve => {
+
+            getDownloadURL(this.storeRef).then(res => {
+                this.image = res;
+                resolve(res);
+            }).catch(err => {
+                switch (err.code) {
+                    case 'storage/object-not-found':
+                        resolve(null);
+                }
+            })
+        })
     }
 
 }
