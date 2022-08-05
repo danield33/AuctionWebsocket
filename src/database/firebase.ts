@@ -8,7 +8,7 @@ require("dotenv").config();
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: process.env.FIREBASE_KEY,
     authDomain: "delawareauctionapp.firebaseapp.com",
     databaseURL: "https://delawareauctionapp-default-rtdb.firebaseio.com",
@@ -19,6 +19,5 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
+export const app = initializeApp(firebaseConfig);
 

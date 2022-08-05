@@ -1,5 +1,6 @@
 import {DatabaseReference, getDatabase, ref, set} from "firebase/database";
 import {getDownloadURL, getStorage, ref as storeRef, StorageReference, uploadString, deleteObject} from "firebase/storage";
+import {app} from "../../firebase";
 
 const storage = getStorage();
 
@@ -23,7 +24,7 @@ export class Organization {
         this.name = organization.name;
         this.id = organization.id;
         this.description = organization.description;
-        this.ref = ref(getDatabase(), 'buyers/'+this.id);
+        this.ref = ref(getDatabase(app), 'buyers/'+this.id);
         this.storeRef = storeRef(storage, 'buyer/'+this.id+'.png');
 
     }

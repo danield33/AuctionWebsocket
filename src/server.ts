@@ -35,6 +35,7 @@ export class AuctionServer {
     }
 
     private listen() {
+
         this.server.listen(this.port, () => {
             console.log(`Listening on http://localhost:${this.port}`);
         });

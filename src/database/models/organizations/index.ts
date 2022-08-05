@@ -1,11 +1,12 @@
 import {Organization, OrganizationObj} from "./Organization";
 import {child, getDatabase, onValue, ref, remove, set} from 'firebase/database';
+import {app} from "../../firebase";
 
 export class Organizations {
 
-    readonly orgs = new Map<string, Organization>();
     idIncrement = 0;
-    private readonly ref = ref(getDatabase(), 'buyers');
+    readonly orgs = new Map<string, Organization>();
+    private readonly ref = ref(getDatabase(app), 'buyers');
 
     constructor() {
         this.getDataFromFirebase();
@@ -38,7 +39,7 @@ export class Organizations {
         this.orgs.set(newOrg.id, newOrg);
 
         this.idIncrement++;
-        set(ref(getDatabase(), 'idIncrement'), this.idIncrement);
+        set(ref(getDatabase(app), 'idIncrement'), this.idIncrement);
         newOrg.save();
         return newOrg;
     }
@@ -52,13 +53,6 @@ export class Organizations {
 
     async save() {
         await set(this.ref, Object.fromEntries(this.orgs));
-    }
-
-    toJSON() {
-        return {
-            idIncrement: this.idIncrement,
-            participates: Object.fromEntries(this.orgs)
-        };
     }
 
 }

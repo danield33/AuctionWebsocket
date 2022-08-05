@@ -1,10 +1,13 @@
 import {Organizations} from "./models/organizations";
-import './firebase'
-const data = require('../../OrgData.json');
+import './firebase';
+import { initializeApp } from "firebase/app";
+import {app, firebaseConfig} from "./firebase";
+import firebase from "firebase/compat";
+
 
 class Auction {
 
-    readonly organizations: Organizations;
+    organizations: Organizations;
 
     constructor() {
         this.organizations = new Organizations()
